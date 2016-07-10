@@ -27,16 +27,21 @@
 *.exe
 *.out
 *.app
-ccollection_test
+
+#test and benchmark outputs
+*_test
+*_benchmark
 
 # cmake files
 CMakeFiles
 cmake_install.cmake
 CMakeCache.txt
+CTestTestfile.cmake
 Makefile
 
 # VIM files
 *.swp
 
-#Google test files
+#Google test and benchmark files
 test/gtest
+benchmark/google-benchmark

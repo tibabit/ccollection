@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(ccollection)
 
+option(CCOLLECTION_ENABLE_BENCHMARK "Enable benchmarking" ON)
+
 include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/test/gtest/include")
 
@@ -18,3 +20,8 @@ add_executable(ccollection_test test/test_main.cpp
     )
 
 target_link_libraries(ccollection_test ccollection gtest pthread)
+
+if (CCOLLECTION_ENABLE_BENCHMARK)
+    enable_testing()
+    add_subdirectory(benchmark)
+endif()

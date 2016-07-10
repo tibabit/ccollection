@@ -24,10 +24,6 @@ bool vector_is_full(vector_t* vector);
  * resize vector to number of elements supplied by count
  */
 bool vector_resize(vector_t* vector, size_t count);
-/**
- * shrink vector to a smaller size
- */
-bool vector_shrink(vector_t* vector, size_t count);
 
 vector_t* vector_new(size_t elem_size)
 {
@@ -99,7 +95,7 @@ bool vector_pop_back(vector_t* vector)
         // if new size <= 25 % of capacity resize it half capacity
         if (vector->size <= vector->capacity / 4)
         {
-            status = vector_shrink(vector, vector->capacity / 2);
+            status = vector_resize(vector, vector->capacity / 2);
         }
     }
 
@@ -140,31 +136,6 @@ bool vector_resize(vector_t* vector, size_t count)
 
     uint8_t *items = ccollection_realloc(vector->items, count * vector->element_size);
     ASSERT(items != NULL, false);
-
-    vector->items = items;
-    vector->capacity = count;
-
-    return true;
-}
-
-bool vector_shrink(vector_t* vector, size_t count)
-{
-    ASSERT_E(vector != NULL, EBADPOINTER, false);
-
-    if (count >= vector->capacity)
-    {
-        return true;
-    }
-
-    // allocate new array of reduced size
-    uint8_t* items = ccollection_calloc(count * vector->element_size);
-    ASSERT(items != NULL, false);
-
-    // copy elements
-    ccollection_copy(items, vector->items, count * vector->element_size);
-
-    // free container elements
-    ccollection_free(vector->items);
 
     vector->items = items;
     vector->capacity = count;
