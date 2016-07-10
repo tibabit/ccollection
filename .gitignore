@@ -27,6 +27,7 @@
 *.exe
 *.out
 *.app
+ccollection_test
 
 # cmake files
 CMakeFiles
@@ -36,3 +37,6 @@ Makefile
 
 # VIM files
 *.swp
+
+#Google test files
+test/gtest
