@@ -46,6 +46,69 @@ TEST(vectorTest, vectorAddInt)
 
     vector_destroy(vector);
 }
+TEST(vectorTest, vectorPopBack)
+{
+    vector_t *vector = vector_new(sizeof(int));
+
+    ASSERT_TRUE(vector != NULL);
+
+    int t;
+    bool status;
+
+    const size_t count = 1000000;
+
+    for (int i = 0; i < count; i++)
+    {
+        int val = rand();
+        status = vector_push_back(vector, &val);
+        EXPECT_EQ(status, true);
+    }
+    EXPECT_EQ(vector_get_size(vector), count);
+    for (int i = 0; i < count; i++)
+    {
+        status = vector_pop_back(vector);
+        EXPECT_EQ(status, true);
+    }
+
+    EXPECT_EQ(vector_get_size(vector), 0);
+
+    vector_destroy(vector);
+}
+TEST(vectorTest, pushAfterPop)
+{
+    vector_t *vector = vector_new(sizeof(int));
+
+    ASSERT_TRUE(vector != NULL);
+
+    int t;
+    bool status;
+
+    const size_t count = 1000000;
+
+    for (int i = 0; i < count; i++)
+    {
+        int val = rand();
+        status = vector_push_back(vector, &val);
+        EXPECT_EQ(status, true);
+    }
+    EXPECT_EQ(vector_get_size(vector), count);
+    for (int i = 0; i < count; i++)
+    {
+        status = vector_pop_back(vector);
+        EXPECT_EQ(status, true);
+    }
+    EXPECT_EQ(vector_get_size(vector), 0);
+
+    for (int i = 0; i < count; i++)
+    {
+        int val = rand();
+        status = vector_push_back(vector, &val);
+        EXPECT_EQ(status, true);
+    }
+    EXPECT_EQ(vector_get_size(vector), count);
+
+    vector_destroy(vector);
+}
 TEST(vectorTest, vectorAddPointer)
 {
     vector_t *vector = vector_new(sizeof(int*));

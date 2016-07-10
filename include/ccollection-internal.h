@@ -53,6 +53,7 @@ EXTERN_C_BEGIN
     if(((void*)(ptr)) != NULL) \
         free(ptr);
 
+#define ccollection_copy(dst, src, size)    memcpy((void*)(dst), (void*)(src), size)
 
 /** typedefs */
 

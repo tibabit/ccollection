@@ -11,7 +11,7 @@ typedef struct vector_t vector_t; /** opaque pointer definition for vector */
 /* ctor and dtor */
 
 /**
- * returns a pointer to vector_t with inital capacity 0. returns NULL of elem_size <=0 and sets errno.
+ * returns a pointer to vector_t with initial capacity 0. Returns NULL of elem_size <=0 and sets errno.
  * call ccollection_strerror to get the error string;
  */
 vector_t* vector_new(size_t elem_size);
@@ -20,7 +20,7 @@ vector_t* vector_new(size_t elem_size);
  */
 void vector_destroy(vector_t* vector);
 /**
- * increase capacity of vector to accomodate minimum number of elements supplied by count. Return true if successful.
+ * increase capacity of vector to accommodate minimum number of elements supplied by count. Return true if successful.
  * Otherwise returns false.
  * If current capacity of the container is > count, nothing happens.
  * call ccollection_strerror to get the error string.
@@ -34,11 +34,11 @@ bool vector_reserve(vector_t* vector, size_t count);
  */
 bool vector_push_back(vector_t* vector, item_t* item);
 /**
- * add an item to the vector. Returns true if successful otherwise returns false and sets errno
- * this function resizes the container to double it's capacity once it is full
- * call ccollection_strerror to get the error string;
+ * Deletes last element present in the container.
+ * NOTE: this function does not free memory every time an element is deleted, but only when the container
+ * size is significantly less than capacity, nothhing happens if container is empty
  */
-bool vector_push_back(vector_t* vector, item_t* item);
+bool vector_pop_back(vector_t* vector);
 
 /**
  * get and item from vector, if index is < vector size then its value, is copied into item and function returns true.
