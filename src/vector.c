@@ -10,13 +10,13 @@ EXTERN_C_BEGIN
 
 typedef struct vector_t
 {
-    uint8_t *items;                /** stores all elements of the container */
+    uint8_t *items;             /** stores all elements of the container */
     size_t element_size;        /** size of one element */
     size_t size;                /** total number of elements in container */
     size_t capacity;            /** capacity of the container */
 } vector_t;
 
-/** returns true of size == capacity */
+/** returns true if size == capacity */
 bool vector_is_full(vector_t* vector);
 /** resize vector to number of elements supllied by elements */
 bool vector_resize(vector_t* vector, size_t elements);

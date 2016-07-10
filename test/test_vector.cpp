@@ -1,6 +1,8 @@
+#include <cerrno>
+
 #include "gtest/gtest.h"
 
-#include "include/vector.h"
+#include "include/ccollection.h"
 
 TEST(vectorTest, newVector)
 {
@@ -19,6 +21,7 @@ TEST(vectorTest, newVectorBadSize)
     // element size 0
     vector_t *vector = vector_new(0);
     EXPECT_TRUE(vector == NULL);
+    EXPECT_EQ(errno, EBADELEMSIZE);
 }
 
 TEST(vectorTest, vectorAddInt)
@@ -142,5 +145,27 @@ TEST(vectorTest, vectorGetPointer)
     delete t;
     delete u;
     delete v;
+    vector_destroy(vector);
+}
+TEST(vectorTest, outOfRangeCheck)
+{
+    vector_t *vector = vector_new(sizeof(int));
+
+    ASSERT_TRUE(vector != NULL);
+
+    int t;
+    bool status;
+
+    status = vector_get(vector, 0, &t);
+    EXPECT_EQ(status, false);
+    EXPECT_EQ(errno, EOUTOFRANGE);
+
+    t = 1;
+    vector_add(vector, &t);
+
+    status = vector_get(vector, 1, &t);
+    EXPECT_EQ(status, false);
+    EXPECT_EQ(errno, EOUTOFRANGE);
+
     vector_destroy(vector);
 }

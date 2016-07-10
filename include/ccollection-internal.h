@@ -14,12 +14,16 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+EXTERN_C_BEGIN
+
 
 /** ccollection error codes */
 #define EOFFSET             1024
 #define EBADELEMSIZE        (EOFFSET + 1)           /** Invalid element size */
 #define EBADPOINTER         (EOFFSET + 2)           /** pointer points to NULL */
 #define EOUTOFRANGE         (EOFFSET + 3)           /** Index was out of range */
+
+const char* ccollection_strerror(int err);
 
 
 /** error checking */
@@ -48,5 +52,8 @@
 /** typedefs */
 
 typedef void item_t;            /** opaque item type used in all containers */
+
+
+EXTERN_C_END
 
 #endif /* end of include guard: CCOLLECTION_INTERNAL_H */
