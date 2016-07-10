@@ -11,7 +11,7 @@ TEST(vectorTest, newVector)
     ASSERT_TRUE(vector != NULL);
     EXPECT_EQ(vector_is_empty(vector), true);
     EXPECT_EQ(vector_get_size(vector), 0);
-    EXPECT_EQ(vector_get_capacity(vector), 0);
+    EXPECT_EQ(vector_get_capacity(vector), 1);
 
     vector_destroy(vector);
 }
@@ -33,19 +33,16 @@ TEST(vectorTest, vectorAddInt)
     int t;
     bool status;
 
-    t = 1;
-    status = vector_add(vector, &t);
-    EXPECT_EQ(status, true);
+    const size_t count = 1000000;
 
-    t = 2;
-    status = vector_add(vector, &t);
-    EXPECT_EQ(status, true);
+    for (int i = 0; i < count; i++)
+    {
+        int val = rand();
+        status = vector_push_back(vector, &val);
+        EXPECT_EQ(status, true);
+    }
 
-    t = 3;
-    status = vector_add(vector, &t);
-    EXPECT_EQ(status, true);
-
-    EXPECT_EQ(vector_get_size(vector), 3);
+    EXPECT_EQ(vector_get_size(vector), count);
 
     vector_destroy(vector);
 }
@@ -55,24 +52,21 @@ TEST(vectorTest, vectorAddPointer)
 
     ASSERT_TRUE(vector != NULL);
 
-    int *t = new int[1];
     bool status;
 
-    t[0] = 1;
-    status = vector_add(vector, &t);
-    EXPECT_EQ(status, true);
+    const size_t count = 1000000;
 
-    t[0] = 2;
-    status = vector_add(vector, &t);
-    EXPECT_EQ(status, true);
+    for (int i = 0; i < count; i++)
+    {
+        int *t = new int[1];
+        t[0] = rand();
+        status = vector_push_back(vector, &t);
+        EXPECT_EQ(status, true);
+        delete t;
+    }
 
-    t[0] = 3;
-    status = vector_add(vector, &t);
-    EXPECT_EQ(status, true);
+    EXPECT_EQ(vector_get_size(vector), count);
 
-    EXPECT_EQ(vector_get_size(vector), 3);
-
-    delete t;
     vector_destroy(vector);
 }
 
@@ -85,26 +79,18 @@ TEST(vectorTest, vectorGetInt)
     int t;
     bool status;
 
-    t = 1;
-    vector_add(vector, &t);
-    t = 2;
-    vector_add(vector, &t);
-    t = 3;
-    vector_add(vector, &t);
+    const size_t count = 1000000;
 
-    EXPECT_EQ(vector_get_size(vector), 3);
+    for (int i = 0; i < count; i++)
+    {
+        int val = rand();
+        t = val;
+        vector_push_back(vector, &t);
 
-    status = vector_get(vector, 0, &t);
-    EXPECT_EQ(status, true);
-    EXPECT_EQ(t, 1);
-
-    status = vector_get(vector, 1, &t);
-    EXPECT_EQ(status, true);
-    EXPECT_EQ(t, 2);
-
-    status = vector_get(vector, 2, &t);
-    EXPECT_EQ(status, true);
-    EXPECT_EQ(t, 3);
+        status = vector_at(vector, i, &t);
+        EXPECT_EQ(status, true);
+        EXPECT_EQ(t, val);
+    }
 
     vector_destroy(vector);
 }
@@ -114,37 +100,24 @@ TEST(vectorTest, vectorGetPointer)
 
     ASSERT_TRUE(vector != NULL);
 
-    int *t = new int[1];
-    int *u = new int[1];
-    int *v = new int[1];
     bool status;
 
-    t[0] = 1;
-    vector_add(vector, &t);
+    const size_t count = 1000000;
 
-    u[0] = 2;
-    vector_add(vector, &u);
+    for (int i = 0; i < count; i++)
+    {
+        int *t = new int[1];
+        int val = rand();
+        t[0] = val;
+        vector_push_back(vector, &t);
 
-    v[0] = 3;
-    vector_add(vector, &v);
+        status = vector_at(vector, i, &t);
+        EXPECT_EQ(status, true);
+        EXPECT_EQ(t[0], val);
 
-    EXPECT_EQ(vector_get_size(vector), 3);
+        delete t;
 
-    status = vector_get(vector, 0, &t);
-    EXPECT_EQ(status, true);
-    EXPECT_EQ(t[0], 1);
-
-    status = vector_get(vector, 1, &u);
-    EXPECT_EQ(status, true);
-    EXPECT_EQ(u[0], 2);
-
-    status = vector_get(vector, 2, &v);
-    EXPECT_EQ(status, true);
-    EXPECT_EQ(v[0], 3);
-
-    delete t;
-    delete u;
-    delete v;
+    }
     vector_destroy(vector);
 }
 TEST(vectorTest, outOfRangeCheck)
@@ -156,14 +129,14 @@ TEST(vectorTest, outOfRangeCheck)
     int t;
     bool status;
 
-    status = vector_get(vector, 0, &t);
+    status = vector_at(vector, 0, &t);
     EXPECT_EQ(status, false);
     EXPECT_EQ(errno, EOUTOFRANGE);
 
     t = 1;
-    vector_add(vector, &t);
+    vector_push_back(vector, &t);
 
-    status = vector_get(vector, 1, &t);
+    status = vector_at(vector, 1, &t);
     EXPECT_EQ(status, false);
     EXPECT_EQ(errno, EOUTOFRANGE);
 
@@ -176,8 +149,6 @@ TEST(vectorTest, reserve)
 
     ASSERT_TRUE(vector != NULL);
 
-    EXPECT_EQ(vector_get_capacity(vector), 0);
-
     bool status;
 
     status = vector_reserve(vector, 10);
@@ -187,4 +158,6 @@ TEST(vectorTest, reserve)
     status = vector_reserve(vector, 5);
     EXPECT_EQ(status, true);
     EXPECT_EQ(vector_get_capacity(vector), 10);
+
+    vector_destroy(vector);
 }

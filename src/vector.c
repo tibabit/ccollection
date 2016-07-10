@@ -32,6 +32,10 @@ vector_t* vector_new(size_t elem_size)
     ASSERT(vector != NULL, NULL);
 
     vector->element_size = elem_size;
+
+    vector_resize(vector, 1);
+
+    return vector;
 }
 
 void vector_destroy(vector_t* vector)
@@ -58,7 +62,7 @@ bool vector_is_empty(vector_t* vector)
     return (vector->size == 0);
 }
 
-bool vector_add(vector_t* vector, item_t* item)
+bool vector_push_back(vector_t* vector, item_t* item)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, false);
     ASSERT_E(item != NULL, EBADPOINTER, false);
@@ -78,7 +82,7 @@ bool vector_add(vector_t* vector, item_t* item)
     return true;
 }
 
-bool vector_get(vector_t* vector, size_t index, item_t* item)
+bool vector_at(vector_t* vector, size_t index, item_t* item)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, false);
     ASSERT_E(item != NULL, EBADPOINTER, false);

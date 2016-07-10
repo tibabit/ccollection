@@ -6,6 +6,8 @@ include_directories("${PROJECT_SOURCE_DIR}/test/gtest/include")
 
 link_directories("${PROJECT_SOURCE_DIR}/test/gtest/lib")
 
+add_definitions(-D_DEBUG_)
+
 add_library(ccollection src/vector.c
     src/ccollection.c
     )

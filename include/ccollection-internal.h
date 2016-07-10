@@ -10,9 +10,16 @@
     #define EXTERN_C_END
 #endif
 
+#ifdef _DEBUG_
+    #define DEBUG(frmt, ...)    fprintf(stdout, frmt, ##__VA_ARGS__)
+#else
+    #define DEBUG(frmt, ...)
+#endif
+
 /* common include files */
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 EXTERN_C_BEGIN
 

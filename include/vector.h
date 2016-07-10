@@ -32,14 +32,20 @@ bool vector_reserve(vector_t* vector, size_t count);
  * add an item to the vector. Returns true if successful otherwise returns false and sets errno
  * call ccollection_strerror to get the error string;
  */
-bool vector_add(vector_t* vector, item_t* item);
+bool vector_push_back(vector_t* vector, item_t* item);
+/**
+ * add an item to the vector. Returns true if successful otherwise returns false and sets errno
+ * this function resizes the container to double it's capacity once it is full
+ * call ccollection_strerror to get the error string;
+ */
+bool vector_push_back(vector_t* vector, item_t* item);
 
 /**
  * get and item from vector, if index is < vector size then its value, is copied into item and function returns true.
  * Otherwise function returns false and sets errno.
  * call ccollection_strerror to get the error string;
  */
-bool vector_get(vector_t* vector, size_t index, item_t* item);
+bool vector_at(vector_t* vector, size_t index, item_t* item);
 
 /**
  * get size of vector
