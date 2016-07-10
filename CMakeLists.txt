@@ -1,27 +1,26 @@
 cmake_minimum_required(VERSION 2.6)
 project(ccollection)
 
+# build benchmarks
 option(CCOLLECTION_ENABLE_BENCHMARK "Enable benchmarking" ON)
+#build unit test
+option(CCOLLECTION_ENABLE_UNIT_TESTS "Enable unit tests" ON)
+# enable ctest
+set(BUILD_TESTING ON)
 
+# needed at all places
 include_directories("${PROJECT_SOURCE_DIR}")
-include_directories("${PROJECT_SOURCE_DIR}/test/gtest/include")
 
-link_directories("${PROJECT_SOURCE_DIR}/test/gtest/lib")
+add_subdirectory(src)
 
-add_definitions(-D_DEBUG_)
-
-add_library(ccollection src/vector.c
-    src/ccollection.c
-    )
-
-add_executable(ccollection_test test/test_main.cpp
-    test/test_ccollection.cpp
-    test/test_vector.cpp
-    )
-
-target_link_libraries(ccollection_test ccollection gtest pthread)
+if (BUILD_TESTING)
+    enable_testing()
+endif()
 
 if (CCOLLECTION_ENABLE_BENCHMARK)
-    enable_testing()
     add_subdirectory(benchmark)
+endif()
+
+if (CCOLLECTION_ENABLE_UNIT_TESTS)
+    add_subdirectory(test)
 endif()
