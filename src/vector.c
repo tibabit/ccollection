@@ -18,8 +18,8 @@ typedef struct vector_t
 
 /** returns true if size == capacity */
 bool vector_is_full(vector_t* vector);
-/** resize vector to number of elements supllied by elements */
-bool vector_resize(vector_t* vector, size_t elements);
+/** resize vector to number of elements supplied by count */
+bool vector_resize(vector_t* vector, size_t count);
 
 vector_t* vector_new(size_t elem_size)
 {
@@ -65,7 +65,12 @@ bool vector_add(vector_t* vector, item_t* item)
 
     if (vector_is_full(vector))
     {
-        vector_resize(vector, vector->capacity * 2); // double the size when vector is full
+        bool status = vector_resize(vector, vector->capacity * 2); // double the size when vector is full
+
+        if (!status)
+        {
+            return status;
+        }
     }
     memcpy(vector->items + (vector->size * vector->element_size), item, vector->element_size);
     vector->size++;
@@ -90,14 +95,28 @@ bool vector_is_full(vector_t* vector)
     return (vector->size == vector->capacity);
 }
 
-bool vector_resize(vector_t* vector, size_t elements)
+bool vector_reserve(vector_t* vector, size_t count)
 {
-    uint8_t *items = ccollection_realloc(vector->items, elements * vector->element_size);
+    ASSERT_E(vector, EBADPOINTER, false);
+
+    if (vector->capacity < count)
+    {
+        return vector_resize(vector, count);
+    }
+
+    return true;
+}
+
+bool vector_resize(vector_t* vector, size_t count)
+{
+    uint8_t *items = ccollection_realloc(vector->items, count * vector->element_size);
 
     ASSERT(items != NULL, false);
 
     vector->items = items;
-    vector->capacity = elements;
+    vector->capacity = count;
+
+    return true;
 }
 
 EXTERN_C_END

@@ -1,4 +1,4 @@
-#include "include/ccollection-internal.h"
+#include "include/ccollection.h"
 
 #include <string.h>
 

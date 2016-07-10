@@ -23,8 +23,6 @@ EXTERN_C_BEGIN
 #define EBADPOINTER         (EOFFSET + 2)           /** pointer points to NULL */
 #define EOUTOFRANGE         (EOFFSET + 3)           /** Index was out of range */
 
-const char* ccollection_strerror(int err);
-
 
 /** error checking */
 #define ASSERT_E(expr, err, ret) \

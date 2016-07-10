@@ -14,8 +14,18 @@ typedef struct vector_t vector_t; /** opaque pointer definition for vector */
  * returns a pointer to vector_t with inital capacity 0. returns NULL of elem_size <=0 and sets errno.
  * call ccollection_strerror to get the error string;
  */
-vector_t*   vector_new(size_t elem_size);
-void        vector_destroy(vector_t* vector);
+vector_t* vector_new(size_t elem_size);
+/**
+ * destroy all elements and cleanup all elements
+ */
+void vector_destroy(vector_t* vector);
+/**
+ * increase capacity of vector to accomodate minimum number of elements supplied by count. Return true if successful.
+ * Otherwise returns false.
+ * If current capacity of the container is > count, nothing happens.
+ * call ccollection_strerror to get the error string.
+ */
+bool vector_reserve(vector_t* vector, size_t count);
 
 /** vector manipulation */
 /**

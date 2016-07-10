@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "include/ccollection-internal.h"
+#include "include/ccollection.h"
 
 TEST(CCollection, ccollectionStrerror)
 {

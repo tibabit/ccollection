@@ -169,3 +169,22 @@ TEST(vectorTest, outOfRangeCheck)
 
     vector_destroy(vector);
 }
+
+TEST(vectorTest, reserve)
+{
+    vector_t* vector = vector_new(sizeof(int));
+
+    ASSERT_TRUE(vector != NULL);
+
+    EXPECT_EQ(vector_get_capacity(vector), 0);
+
+    bool status;
+
+    status = vector_reserve(vector, 10);
+    EXPECT_EQ(status, true);
+    EXPECT_EQ(vector_get_capacity(vector), 10);
+
+    status = vector_reserve(vector, 5);
+    EXPECT_EQ(status, true);
+    EXPECT_EQ(vector_get_capacity(vector), 10);
+}
