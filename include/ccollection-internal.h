@@ -16,6 +16,17 @@
     #define DEBUG(frmt, ...)
 #endif
 
+#define MAX(a,b)    ((a) > (b) ? (a) : (b))
+#define MIN(a,b)    ((a) < (b) ? (a) : (b))
+#define NEXT_POW2(n)    \
+    n--; \
+    n |= n >> 1; \
+    n |= n >> 2; \
+    n |= n >> 4; \
+    n |= n >> 8; \
+    n |= n >> 16; \
+    n++;
+
 /* common include files */
 #include <stddef.h>
 #include <stdbool.h>

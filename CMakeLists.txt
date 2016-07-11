@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(ccollection)
 
 # build benchmarks
-option(CCOLLECTION_ENABLE_BENCHMARK "Enable benchmarking" ON)
+option(CCOLLECTION_ENABLE_BENCHMARK "Enable benchmarking" OFF)
 #build unit test
 option(CCOLLECTION_ENABLE_UNIT_TESTS "Enable unit tests" ON)
 # enable ctest

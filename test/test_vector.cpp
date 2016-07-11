@@ -224,3 +224,26 @@ TEST(vectorTest, reserve)
 
     vector_destroy(vector);
 }
+TEST(vectorTest, assign_fill)
+{
+    vector_t *vector = vector_new(sizeof(int));
+
+    const int val = 100;
+    const int count = 1 << 20;
+
+    ASSERT_TRUE(vector != NULL);
+
+    vector_assign_fill(vector, count, &val);
+    EXPECT_EQ(vector_get_size(vector), count);
+    for (int i = 0; i < count; i++)
+    {
+        int out;
+        bool status = vector_at(vector, i, &out);
+
+        EXPECT_EQ(status, true);
+        EXPECT_EQ(out, val);
+    }
+    EXPECT_EQ(vector_get_size(vector), count);
+    EXPECT_EQ(vector_get_capacity(vector), count);
+    vector_destroy(vector);
+}
