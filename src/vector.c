@@ -119,7 +119,7 @@ bool vector_pop_back(vector_t* vector)
     return status;
 }
 
-bool vector_assign_fill(vector_t* vector, size_t n, const item_t* val)
+bool vector_assign_n(vector_t* vector, size_t n, const item_t* val)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, false);
     ASSERT_E(n > 0, EINVAL, false);

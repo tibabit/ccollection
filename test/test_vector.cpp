@@ -233,7 +233,7 @@ TEST(vectorTest, assign_fill)
 
     ASSERT_TRUE(vector != NULL);
 
-    vector_assign_fill(vector, count, &val);
+    vector_assign_n(vector, count, &val);
     EXPECT_EQ(vector_get_size(vector), count);
     for (int i = 0; i < count; i++)
     {

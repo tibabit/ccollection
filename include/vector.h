@@ -70,7 +70,7 @@ bool vector_pop_back(vector_t* vector);
 /**
  * assign first n elements vector to the val, if n is > size of vector then new elements are inserted
  */
-bool vector_assign_fill(vector_t* vector, size_t n, const item_t* val);
+bool vector_assign_n(vector_t* vector, size_t n, const item_t* val);
 
 
 //========================================================
