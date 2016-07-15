@@ -75,7 +75,7 @@ cerror_t vector_assign_n(vector_t* vector, const size_t n, const item_t* val);
  * Insert a single element at a location in the vector, The element is inserted before the
  * specified position.
  */
-cerror_t vector_insert(vector_t* vector, const size_t pos, const item_t* item);
+cerror_t vector_insert(vector_t* vector, const pos_t pos, const item_t* item);
 
 
 //==============================================================================
@@ -87,7 +87,7 @@ cerror_t vector_insert(vector_t* vector, const size_t pos, const item_t* item);
  * Otherwise function returns false and sets errno.
  * call ccollection_strerror to get the error string;
  */
-cerror_t vector_at(const vector_t* vector, const size_t index, item_t* item);
+cerror_t vector_at(const vector_t* vector, const pos_t index, item_t* item);
 
 EXTERN_C_END
 

@@ -127,8 +127,7 @@ cerror_t vector_assign_n(vector_t* vector, const size_t n, const item_t* val)
     cerror_t err = ERROR_NONE;
 
     // calculate next power of 2
-    int capacity = n;
-    NEXT_POW2(capacity);
+    int capacity = next_pow2(n);
     while (capacity > vector->capacity)
     {
         err = vector_resize(vector, capacity);
@@ -146,10 +145,43 @@ cerror_t vector_assign_n(vector_t* vector, const size_t n, const item_t* val)
     return err;
 }
 
+cerror_t vector_insert(vector_t* vector, const pos_t pos, const item_t* item)
+{
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
+    ASSERT_E(item != NULL, EBADPOINTER, ERROR_FAILED);
+    ASSERT_E(pos <= vector->size && pos >= 0, EOUTOFRANGE, ERROR_FAILED);
+
+    // if size == capacity then reallocate
+    if (vector->size == vector->capacity)
+    {
+        cerror_t err = vector_resize(vector, vector->capacity * 2);
+        ASSERT(err == ERROR_NONE, err);
+    }
+    if (pos == vector->size) // insert at the end
+    {
+        ccollection_copy(vector->items + vector->size * vector->element_size, item, vector->element_size);
+        vector->size++;
+
+        return ERROR_NONE;
+    }
+    // shift all elements by 1 to right after starting from position pos
+    for (int i = vector->size - 1; i >= pos; i--)
+    {
+        ccollection_copy(vector->items + vector->element_size * (i + 1),
+                vector->items + vector->element_size * i,
+                vector->element_size);
+    }
+    // now insert the new element
+    ccollection_copy(vector->items + pos * vector->element_size, item, vector->element_size);
+    vector->size++;
+
+    return ERROR_NONE;
+}
+
 //==============================================================================
 // Elements access
 //==============================================================================
-cerror_t vector_at(const vector_t* vector, const size_t index, item_t* item)
+cerror_t vector_at(const vector_t* vector, const pos_t index, item_t* item)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
     ASSERT_E(item != NULL, EBADPOINTER, ERROR_FAILED);

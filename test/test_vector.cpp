@@ -4,7 +4,6 @@
 
 #include "include/ccollection.h"
 
-#if 1
 TEST(vectorTest, newVector)
 {
     vector_t *vector = vector_new(sizeof(int));
@@ -248,5 +247,82 @@ TEST(vectorTest, assign_fill)
     EXPECT_EQ(vector_get_capacity(vector), count);
     vector_destroy(vector);
 }
-#else
-#endif
+
+TEST(vectorTest, insertAt0InEmptyVector)
+{
+    vector_t* vector = vector_new(sizeof(int));
+
+    int val = 100, out = 0;
+    cerror_t err = vector_insert(vector, 0, &val);
+
+    ASSERT_EQ(err, ERROR_NONE);
+
+    EXPECT_EQ(vector_get_size(vector), 1);
+    vector_at(vector, 0, &out);
+    EXPECT_EQ(val, out);
+}
+
+TEST(vectorTest, insertAt1InEmptyVector)
+{
+    vector_t* vector = vector_new(sizeof(int));
+
+    int val = 100, out = 0;
+    cerror_t err = vector_insert(vector, 5, &val);
+
+    ASSERT_EQ(err, ERROR_FAILED);
+    ASSERT_EQ(errno, EOUTOFRANGE);
+
+    EXPECT_EQ(vector_get_size(vector), 0);
+}
+
+TEST(vectorTest, insertAt0InNonEmptyVector)
+{
+    vector_t* vector = vector_new(sizeof(int));
+
+    int val = 100, out = 0;
+    const size_t count = 1 << 10;
+
+    for (int i = 0; i < count; i++)
+    {
+        val = (i + 1) * 10;
+        vector_push_back(vector, &val);
+    }
+    cerror_t err = vector_insert(vector, 0, &val);
+
+    ASSERT_EQ(err, ERROR_NONE);
+    EXPECT_EQ(vector_get_size(vector), count + 1);
+
+    vector_at(vector, 0, &out);
+    EXPECT_EQ(val, out);
+    for (int i = 1; i < count + 1; i++)
+    {
+        vector_at(vector, i, &out);
+        EXPECT_EQ(out, i * 10);
+    }
+}
+
+TEST(vectorTest, insertInMiddleInNonEmptyVector)
+{
+    vector_t* vector = vector_new(sizeof(int));
+
+    int val = 100, out = 0;
+    const size_t count = 1 << 10;
+
+    for (int i = 0; i < count; i++)
+    {
+        val = (i + 1) * 10;
+        vector_push_back(vector, &val);
+    }
+    cerror_t err = vector_insert(vector, 5, &val);
+
+    ASSERT_EQ(err, ERROR_NONE);
+    EXPECT_EQ(vector_get_size(vector), count + 1);
+
+    vector_at(vector, 5, &out);
+    EXPECT_EQ(val, out);
+    for (int i = 6; i < count + 1; i++)
+    {
+        vector_at(vector, i, &out);
+        EXPECT_EQ(out, i * 10);
+    }
+}

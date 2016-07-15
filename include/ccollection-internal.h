@@ -27,14 +27,6 @@
 //==============================================================================
 #define MAX(a,b)    ((a) > (b) ? (a) : (b))
 #define MIN(a,b)    ((a) < (b) ? (a) : (b))
-#define NEXT_POW2(n)    \
-    n--; \
-    n |= n >> 1; \
-    n |= n >> 2; \
-    n |= n >> 4; \
-    n |= n >> 8; \
-    n |= n >> 16; \
-    n++;
 
 //==============================================================================
 // Header files used in almost all files
@@ -90,10 +82,17 @@ EXTERN_C_BEGIN
 //==============================================================================
 /** opaque item type used in all containers */
 typedef void item_t;
+typedef int pos_t;
 
 /** error code returned by functions, -ve error code indicates and error, 0 or +ve is successful */
 typedef int cerror_t;
 
+
+//==============================================================================
+// Helper functions
+//==============================================================================
+
+extern int next_pow2(int n);
 
 EXTERN_C_END
 
