@@ -178,6 +178,23 @@ cerror_t vector_insert(vector_t* vector, const pos_t pos, const item_t* item)
     return ERROR_NONE;
 }
 
+cerror_t vector_erase(vector_t* vector, const pos_t pos)
+{
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
+    ASSERT_E(pos < vector->size && pos >= 0, EOUTOFRANGE, ERROR_FAILED);
+
+    cerror_t err = ERROR_NONE;
+    if (pos < vector->size - 1) // any element but last
+    {
+        ccollection_copy(vector->items + pos * vector->element_size,
+                vector->items + (pos + 1) * vector->element_size,
+                vector->element_size * (vector->size - pos - 1));
+    }
+
+    vector->size--;
+    return vector_shrink(vector);
+}
+
 //==============================================================================
 // Elements access
 //==============================================================================

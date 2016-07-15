@@ -326,3 +326,51 @@ TEST(vectorTest, insertInMiddleInNonEmptyVector)
         EXPECT_EQ(out, i * 10);
     }
 }
+
+TEST(vectorTest, eraseAt0InEmptyVector)
+{
+    vector_t* vector = vector_new(sizeof(int));
+
+    cerror_t err = vector_erase(vector, 0);
+
+    ASSERT_EQ(err, ERROR_FAILED);
+    ASSERT_EQ(errno, EOUTOFRANGE);
+}
+
+TEST(vectorTest, eraseAt0InAnOneElementVector)
+{
+    vector_t* vector = vector_new(sizeof(int));
+
+    int val = 100, out = 0;
+    cerror_t err = vector_push_back(vector, &val);
+
+    ASSERT_EQ(err, ERROR_NONE);
+
+    err = vector_erase(vector, 0);
+    ASSERT_EQ(err, ERROR_NONE);
+    EXPECT_EQ(vector_get_size(vector), 0);
+}
+
+TEST(vectorTest, eraseInMiddleInNonEmptyVector)
+{
+    vector_t* vector = vector_new(sizeof(int));
+
+    int val = 100, out = 0;
+    const size_t count = 1 << 10;
+
+    for (int i = 0; i < count; i++)
+    {
+        val = (i + 1) * 10;
+        vector_push_back(vector, &val);
+    }
+    cerror_t err = vector_erase(vector, 5);
+
+    ASSERT_EQ(err, ERROR_NONE);
+    EXPECT_EQ(vector_get_size(vector), count - 1);
+
+    for (int i = 5; i < count - 1; i++)
+    {
+        vector_at(vector, i, &out);
+        EXPECT_EQ(out, (i + 2) * 10);
+    }
+}

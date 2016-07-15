@@ -76,6 +76,11 @@ cerror_t vector_assign_n(vector_t* vector, const size_t n, const item_t* val);
  * specified position.
  */
 cerror_t vector_insert(vector_t* vector, const pos_t pos, const item_t* item);
+/**
+ * Erase one element from the vetor from specified position and shift all elements
+ * to the left by 1 position
+ */
+cerror_t vector_erase(vector_t* vector, const pos_t pos);
 
 
 //==============================================================================
