@@ -81,6 +81,14 @@ cerror_t vector_insert(vector_t* vector, const pos_t pos, const item_t* item);
  * to the left by 1 position
  */
 cerror_t vector_erase(vector_t* vector, const pos_t pos);
+/**
+ * Swap content of one vector with the content of another vector
+ */
+cerror_t vector_swap(vector_t* first, vector_t* second);
+/**
+ * clear the vector by erasing all elements
+ */
+cerror_t vector_clear(vector_t* vector);
 
 
 //==============================================================================

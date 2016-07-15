@@ -34,6 +34,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdint.h>
 
 
 EXTERN_C_BEGIN
@@ -93,6 +94,8 @@ typedef int cerror_t;
 //==============================================================================
 
 extern int next_pow2(int n);
+void swap_size(size_t *ptr1, size_t *ptr2);
+void swap_ptr(uint8_t **ptr1, uint8_t **ptr2);
 
 EXTERN_C_END
 

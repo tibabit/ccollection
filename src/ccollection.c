@@ -28,3 +28,17 @@ inline int next_pow2(int n)
 
     return n;
 }
+
+void swap_size(size_t *ptr1, size_t *ptr2)
+{
+    size_t tmp = *ptr1;
+    *ptr1 = *ptr2;
+    *ptr2 = tmp;
+
+}
+void swap_ptr(uint8_t **ptr1, uint8_t **ptr2)
+{
+    uint8_t* tmp = *ptr1;
+    *ptr1 = *ptr2;
+    *ptr2 = tmp;
+}

@@ -195,6 +195,26 @@ cerror_t vector_erase(vector_t* vector, const pos_t pos)
     return vector_shrink(vector);
 }
 
+cerror_t vector_swap(vector_t* first, vector_t* second)
+{
+    ASSERT_E(first != NULL, EBADPOINTER, ERROR_FAILED);
+    ASSERT_E(second != NULL, EBADPOINTER, ERROR_FAILED);
+
+    swap_size(&first->size, &second->size);
+    swap_size(&first->capacity, &second->capacity);
+    swap_size(&first->element_size, &second->element_size);
+    swap_ptr(&first->items, &second->items);
+
+    return ERROR_NONE;
+}
+
+cerror_t vector_clear(vector_t* vector)
+{
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
+    vector->size = 0;
+    return vector_resize(vector, 1);
+}
+
 //==============================================================================
 // Elements access
 //==============================================================================

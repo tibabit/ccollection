@@ -33,7 +33,7 @@ TEST(vectorTest, vectorAddInt)
     int t;
     cerror_t status;
 
-    const size_t count = 1 << 20;
+    const size_t count = 1 << 10;
 
     for (int i = 0; i < count; i++)
     {
@@ -55,7 +55,7 @@ TEST(vectorTest, vectorPopBack)
     int t;
     cerror_t status;
 
-    const size_t count = 1000000;
+    const size_t count = 1 << 10;
 
     for (int i = 0; i < count; i++)
     {
@@ -83,7 +83,7 @@ TEST(vectorTest, pushAfterPop)
     int t;
     cerror_t status;
 
-    const size_t count = 1000000;
+    const size_t count = 1 << 10;
 
     for (int i = 0; i < count; i++)
     {
@@ -117,7 +117,7 @@ TEST(vectorTest, vectorAddPointer)
 
     cerror_t status;
 
-    const size_t count = 1000000;
+    const size_t count = 1 << 10;
 
     for (int i = 0; i < count; i++)
     {
@@ -142,7 +142,7 @@ TEST(vectorTest, vectorGetInt)
     int t;
     cerror_t status;
 
-    const size_t count = 1000000;
+    const size_t count = 1 << 10;
 
     for (int i = 0; i < count; i++)
     {
@@ -165,7 +165,7 @@ TEST(vectorTest, vectorGetPointer)
 
     cerror_t status;
 
-    const size_t count = 1000000;
+    const size_t count = 1 << 10;
 
     for (int i = 0; i < count; i++)
     {
@@ -260,6 +260,8 @@ TEST(vectorTest, insertAt0InEmptyVector)
     EXPECT_EQ(vector_get_size(vector), 1);
     vector_at(vector, 0, &out);
     EXPECT_EQ(val, out);
+
+    vector_destroy(vector);
 }
 
 TEST(vectorTest, insertAt1InEmptyVector)
@@ -273,6 +275,7 @@ TEST(vectorTest, insertAt1InEmptyVector)
     ASSERT_EQ(errno, EOUTOFRANGE);
 
     EXPECT_EQ(vector_get_size(vector), 0);
+    vector_destroy(vector);
 }
 
 TEST(vectorTest, insertAt0InNonEmptyVector)
@@ -299,6 +302,7 @@ TEST(vectorTest, insertAt0InNonEmptyVector)
         vector_at(vector, i, &out);
         EXPECT_EQ(out, i * 10);
     }
+    vector_destroy(vector);
 }
 
 TEST(vectorTest, insertInMiddleInNonEmptyVector)
@@ -325,6 +329,7 @@ TEST(vectorTest, insertInMiddleInNonEmptyVector)
         vector_at(vector, i, &out);
         EXPECT_EQ(out, i * 10);
     }
+    vector_destroy(vector);
 }
 
 TEST(vectorTest, eraseAt0InEmptyVector)
@@ -335,6 +340,7 @@ TEST(vectorTest, eraseAt0InEmptyVector)
 
     ASSERT_EQ(err, ERROR_FAILED);
     ASSERT_EQ(errno, EOUTOFRANGE);
+    vector_destroy(vector);
 }
 
 TEST(vectorTest, eraseAt0InAnOneElementVector)
@@ -349,6 +355,7 @@ TEST(vectorTest, eraseAt0InAnOneElementVector)
     err = vector_erase(vector, 0);
     ASSERT_EQ(err, ERROR_NONE);
     EXPECT_EQ(vector_get_size(vector), 0);
+    vector_destroy(vector);
 }
 
 TEST(vectorTest, eraseInMiddleInNonEmptyVector)
@@ -373,4 +380,70 @@ TEST(vectorTest, eraseInMiddleInNonEmptyVector)
         vector_at(vector, i, &out);
         EXPECT_EQ(out, (i + 2) * 10);
     }
+    vector_destroy(vector);
+}
+TEST(vectorTest, swapVector)
+{
+    vector_t *first = vector_new(sizeof(int));
+    vector_t *second = vector_new(sizeof(int));
+
+    const size_t count1 = 1 << 10;
+    const size_t count2 = 1 << 12;
+
+    int val = 0;
+
+    for (int i = 0; i < count1; i++)
+    {
+        val = (i + 1) * 10;
+        vector_push_back(first, &val);
+    }
+
+    for (int i = 0; i < count2; i++)
+    {
+        val = (i + 1) * 10;
+        vector_push_back(second, &val);
+    }
+
+    cerror_t err = vector_swap(first, second);
+    ASSERT_EQ(err, ERROR_NONE);
+
+    ASSERT_EQ(vector_get_size(first), count2);
+    ASSERT_EQ(vector_get_size(second), count1);
+
+    for (int i = 0; i < count2; i++)
+    {
+        vector_at(first, i, &val);
+        ASSERT_EQ(val, (i + 1) * 10);
+    }
+
+    for (int i = 0; i < count1; i++)
+    {
+        vector_at(second, i, &val);
+        ASSERT_EQ(val, (i + 1) * 10);
+    }
+
+    vector_destroy(first);
+    vector_destroy(second);
+
+}
+
+TEST(vectorTest, clearVector)
+{
+    vector_t *vector = vector_new(sizeof(int));
+
+    const size_t count = 1 << 10;
+    int val = 0;
+
+    for (int i = 0; i < count; i++)
+    {
+        val = (i + 1) * 10;
+        vector_push_back(vector, &val);
+    }
+
+    cerror_t err = vector_clear(vector);
+    ASSERT_EQ(err, ERROR_NONE);
+
+    ASSERT_EQ(vector_get_size(vector), 0);
+
+    vector_destroy(vector);
 }
