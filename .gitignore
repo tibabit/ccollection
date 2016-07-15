@@ -40,6 +40,10 @@ CTestTestfile.cmake
 Makefile
 Testing
 
+# Build directories
+bin
+build
+
 # VIM files
 *.swp
 
