@@ -4,6 +4,7 @@
 
 #include "include/ccollection.h"
 
+#if 1
 TEST(vectorTest, newVector)
 {
     vector_t *vector = vector_new(sizeof(int));
@@ -31,15 +32,15 @@ TEST(vectorTest, vectorAddInt)
     ASSERT_TRUE(vector != NULL);
 
     int t;
-    bool status;
+    cerror_t status;
 
-    const size_t count = 1000000;
+    const size_t count = 1 << 20;
 
     for (int i = 0; i < count; i++)
     {
         int val = rand();
         status = vector_push_back(vector, &val);
-        EXPECT_EQ(status, true);
+        EXPECT_EQ(status, ERROR_NONE);
     }
 
     EXPECT_EQ(vector_get_size(vector), count);
@@ -53,7 +54,7 @@ TEST(vectorTest, vectorPopBack)
     ASSERT_TRUE(vector != NULL);
 
     int t;
-    bool status;
+    cerror_t status;
 
     const size_t count = 1000000;
 
@@ -61,13 +62,13 @@ TEST(vectorTest, vectorPopBack)
     {
         int val = rand();
         status = vector_push_back(vector, &val);
-        EXPECT_EQ(status, true);
+        EXPECT_EQ(status, ERROR_NONE);
     }
     EXPECT_EQ(vector_get_size(vector), count);
     for (int i = 0; i < count; i++)
     {
         status = vector_pop_back(vector);
-        EXPECT_EQ(status, true);
+        EXPECT_EQ(status, ERROR_NONE);
     }
 
     EXPECT_EQ(vector_get_size(vector), 0);
@@ -81,7 +82,7 @@ TEST(vectorTest, pushAfterPop)
     ASSERT_TRUE(vector != NULL);
 
     int t;
-    bool status;
+    cerror_t status;
 
     const size_t count = 1000000;
 
@@ -89,13 +90,13 @@ TEST(vectorTest, pushAfterPop)
     {
         int val = rand();
         status = vector_push_back(vector, &val);
-        EXPECT_EQ(status, true);
+        EXPECT_EQ(status, ERROR_NONE);
     }
     EXPECT_EQ(vector_get_size(vector), count);
     for (int i = 0; i < count; i++)
     {
         status = vector_pop_back(vector);
-        EXPECT_EQ(status, true);
+        EXPECT_EQ(status, ERROR_NONE);
     }
     EXPECT_EQ(vector_get_size(vector), 0);
 
@@ -103,7 +104,7 @@ TEST(vectorTest, pushAfterPop)
     {
         int val = rand();
         status = vector_push_back(vector, &val);
-        EXPECT_EQ(status, true);
+        EXPECT_EQ(status, ERROR_NONE);
     }
     EXPECT_EQ(vector_get_size(vector), count);
 
@@ -115,7 +116,7 @@ TEST(vectorTest, vectorAddPointer)
 
     ASSERT_TRUE(vector != NULL);
 
-    bool status;
+    cerror_t status;
 
     const size_t count = 1000000;
 
@@ -124,7 +125,7 @@ TEST(vectorTest, vectorAddPointer)
         int *t = new int[1];
         t[0] = rand();
         status = vector_push_back(vector, &t);
-        EXPECT_EQ(status, true);
+        EXPECT_EQ(status, ERROR_NONE);
         delete t;
     }
 
@@ -140,7 +141,7 @@ TEST(vectorTest, vectorGetInt)
     ASSERT_TRUE(vector != NULL);
 
     int t;
-    bool status;
+    cerror_t status;
 
     const size_t count = 1000000;
 
@@ -151,7 +152,7 @@ TEST(vectorTest, vectorGetInt)
         vector_push_back(vector, &t);
 
         status = vector_at(vector, i, &t);
-        EXPECT_EQ(status, true);
+        EXPECT_EQ(status, ERROR_NONE);
         EXPECT_EQ(t, val);
     }
 
@@ -163,7 +164,7 @@ TEST(vectorTest, vectorGetPointer)
 
     ASSERT_TRUE(vector != NULL);
 
-    bool status;
+    cerror_t status;
 
     const size_t count = 1000000;
 
@@ -175,7 +176,7 @@ TEST(vectorTest, vectorGetPointer)
         vector_push_back(vector, &t);
 
         status = vector_at(vector, i, &t);
-        EXPECT_EQ(status, true);
+        EXPECT_EQ(status, ERROR_NONE);
         EXPECT_EQ(t[0], val);
 
         delete t;
@@ -190,17 +191,17 @@ TEST(vectorTest, outOfRangeCheck)
     ASSERT_TRUE(vector != NULL);
 
     int t;
-    bool status;
+    cerror_t status;
 
     status = vector_at(vector, 0, &t);
-    EXPECT_EQ(status, false);
+    EXPECT_EQ(status, ERROR_FAILED);
     EXPECT_EQ(errno, EOUTOFRANGE);
 
     t = 1;
     vector_push_back(vector, &t);
 
     status = vector_at(vector, 1, &t);
-    EXPECT_EQ(status, false);
+    EXPECT_EQ(status, ERROR_FAILED);
     EXPECT_EQ(errno, EOUTOFRANGE);
 
     vector_destroy(vector);
@@ -212,14 +213,14 @@ TEST(vectorTest, reserve)
 
     ASSERT_TRUE(vector != NULL);
 
-    bool status;
+    cerror_t status;
 
     status = vector_reserve(vector, 10);
-    EXPECT_EQ(status, true);
+    EXPECT_EQ(status, ERROR_NONE);
     EXPECT_EQ(vector_get_capacity(vector), 10);
 
     status = vector_reserve(vector, 5);
-    EXPECT_EQ(status, true);
+    EXPECT_EQ(status, ERROR_NONE);
     EXPECT_EQ(vector_get_capacity(vector), 10);
 
     vector_destroy(vector);
@@ -238,12 +239,14 @@ TEST(vectorTest, assign_fill)
     for (int i = 0; i < count; i++)
     {
         int out;
-        bool status = vector_at(vector, i, &out);
+        cerror_t status = vector_at(vector, i, &out);
 
-        EXPECT_EQ(status, true);
+        EXPECT_EQ(status, ERROR_NONE);
         EXPECT_EQ(out, val);
     }
     EXPECT_EQ(vector_get_size(vector), count);
     EXPECT_EQ(vector_get_capacity(vector), count);
     vector_destroy(vector);
 }
+#else
+#endif

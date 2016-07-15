@@ -2,6 +2,9 @@
 
 #define CCOLLECTION_INTERNAL_H
 
+//==============================================================================
+// c++ portability, Just in case :P
+//==============================================================================
 #ifdef __cplusplus
     #define EXTERN_C_BEGIN  extern "C" {
     #define EXTERN_C_END    }
@@ -10,12 +13,18 @@
     #define EXTERN_C_END
 #endif
 
+//==============================================================================
+// Debugging macros
+//==============================================================================
 #ifdef _DEBUG_
     #define DEBUG(frmt, ...)    fprintf(stdout, frmt, ##__VA_ARGS__)
 #else
     #define DEBUG(frmt, ...)
 #endif
 
+//==============================================================================
+// macro functions
+//==============================================================================
 #define MAX(a,b)    ((a) > (b) ? (a) : (b))
 #define MIN(a,b)    ((a) < (b) ? (a) : (b))
 #define NEXT_POW2(n)    \
@@ -27,36 +36,46 @@
     n |= n >> 16; \
     n++;
 
-/* common include files */
+//==============================================================================
+// Header files used in almost all files
+//==============================================================================
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
 
+
 EXTERN_C_BEGIN
 
-
-/** ccollection error codes */
+//==============================================================================
+// Error codes set by various functions
+//==============================================================================
 #define EOFFSET             1024
 #define EBADELEMSIZE        (EOFFSET + 1)           /** Invalid element size */
 #define EBADPOINTER         (EOFFSET + 2)           /** pointer points to NULL */
 #define EOUTOFRANGE         (EOFFSET + 3)           /** Index was out of range */
 
+#define ERROR_NONE          0                       /** No error */
+#define ERROR_FAILED        -1                      /** function did not execute successfully */
 
-/** error checking */
+//==============================================================================
+// Assertion macros
+//==============================================================================
+// set errno and return
 #define ASSERT_E(expr, err, ret) \
     if (!(expr)) {               \
         errno = err;             \
         return ret;              \
     }
-
+// just return, do not set error number
 #define ASSERT(expr, ...)        \
     if (!(expr)) {               \
         return __VA_ARGS__;      \
     }
 
 
-/** memroy management */
-
+//==============================================================================
+// Memory allocation / de-allocation related macros
+//==============================================================================
 #define ccollection_calloc(size)            calloc(1, size);
 #define ccollection_realloc(ptr, size)      realloc((void*)(ptr), size);
 
@@ -66,9 +85,14 @@ EXTERN_C_BEGIN
 
 #define ccollection_copy(dst, src, size)    memcpy((void*)(dst), (void*)(src), size)
 
-/** typedefs */
+//==============================================================================
+// Aliases / typedefs
+//==============================================================================
+/** opaque item type used in all containers */
+typedef void item_t;
 
-typedef void item_t;            /** opaque item type used in all containers */
+/** error code returned by functions, -ve error code indicates and error, 0 or +ve is successful */
+typedef int cerror_t;
 
 
 EXTERN_C_END

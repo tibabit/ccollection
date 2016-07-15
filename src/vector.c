@@ -18,9 +18,9 @@ typedef struct vector_t
     size_t capacity;            /** capacity of the container */
 } vector_t;
 
-//========================================================
+//==============================================================================
 // Internal functions
-//========================================================
+//==============================================================================
 
 /**
  * returns true if size == capacity
@@ -29,16 +29,15 @@ bool vector_is_full(vector_t* vector);
 /**
  * resize vector to number of elements supplied by count
  */
-bool vector_resize(vector_t* vector, size_t count);
+cerror_t vector_resize(vector_t* vector, size_t count);
 /**
  * If the size of the vector is <= 1/4 of it's capacity then the container is resized to it's half capacity
  */
-bool vector_shrink(vector_t * vector);
+cerror_t vector_shrink(vector_t * vector);
 
-
-//========================================================
+//==============================================================================
 // ctors and dtors
-//========================================================
+//==============================================================================
 vector_t* vector_new(size_t elem_size)
 {
     errno = 0;
@@ -53,18 +52,19 @@ vector_t* vector_new(size_t elem_size)
     return vector;
 }
 
-void vector_destroy(vector_t* vector)
+cerror_t vector_destroy(vector_t* vector)
 {
-    ASSERT(vector != NULL);
+    ASSERT_E(vector != NULL, EBADELEMSIZE, ERROR_FAILED);
 
     ccollection_free(vector->items);
     ccollection_free(vector);
+
+    return ERROR_NONE;
 }
 
-
-//========================================================
+//==============================================================================
 // Capacity
-//========================================================
+//==============================================================================
 size_t vector_get_size(vector_t* vector)
 {
     return vector->size;
@@ -80,68 +80,61 @@ bool vector_is_empty(vector_t* vector)
     return (vector->size == 0);
 }
 
-
-//========================================================
+//==============================================================================
 // vector modifiers
-//========================================================
-bool vector_push_back(vector_t* vector, item_t* item)
+//==============================================================================
+cerror_t vector_push_back(vector_t* vector, item_t* item)
 {
-    ASSERT_E(vector != NULL, EBADPOINTER, false);
-    ASSERT_E(item != NULL, EBADPOINTER, false);
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
+    ASSERT_E(item != NULL, EBADPOINTER, ERROR_FAILED);
 
     if (vector_is_full(vector))
     {
-        bool status = vector_resize(vector, vector->capacity * 2); // double the size when vector is full
+        cerror_t err = vector_resize(vector, vector->capacity * 2); // double the size when vector is full
 
-        if (!status)
-        {
-            return status;
-        }
+        ASSERT(err == ERROR_NONE, err);
     }
-    memcpy(vector->items + (vector->size * vector->element_size), item, vector->element_size);
+    ccollection_copy(vector->items + (vector->size * vector->element_size), item, vector->element_size);
     vector->size++;
 
-    return true;
+    return ERROR_NONE;
 }
 
-bool vector_pop_back(vector_t* vector)
+cerror_t vector_pop_back(vector_t* vector)
 {
-    ASSERT_E(vector != NULL, EBADPOINTER, false);
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
 
-    bool status = true;
+    cerror_t err = ERROR_NONE;
 
     if (!vector_is_empty(vector))
     {
         vector->size--;
-        status = vector_shrink(vector);
+        err = vector_shrink(vector);
     }
 
-    return status;
+    return err;
 }
 
-bool vector_assign_n(vector_t* vector, size_t n, const item_t* val)
+cerror_t vector_assign_n(vector_t* vector, size_t n, const item_t* val)
 {
-    ASSERT_E(vector != NULL, EBADPOINTER, false);
-    ASSERT_E(n > 0, EINVAL, false);
-    ASSERT_E(val != NULL, EBADPOINTER, false);
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
+    ASSERT_E(n > 0, EINVAL, ERROR_FAILED);
+    ASSERT_E(val != NULL, EBADPOINTER, ERROR_FAILED);
 
     // if n < capacity then copy the val to the target element, otherwise first
     // resize the vector then copy the val
 
-    bool status = true;
+    cerror_t err = ERROR_NONE;
+
     // calculate next power of 2
     int capacity = n;
     NEXT_POW2(capacity);
     while (capacity > vector->capacity)
     {
-        status = vector_resize(vector, capacity);
+        err = vector_resize(vector, capacity);
     }
 
-    // something went wrong while resizing vector
-    if (!status)
-    {
-        return status;
-    }
+    ASSERT(err == ERROR_NONE, err);
 
     for(int i = 0; i < n; i++)
     {
@@ -150,69 +143,67 @@ bool vector_assign_n(vector_t* vector, size_t n, const item_t* val)
 
     vector->size = MAX(vector->size, n);
 
-    return status;
+    return err;
 }
 
-
-//========================================================
+//==============================================================================
 // Elements access
-//========================================================
-bool vector_at(vector_t* vector, size_t index, item_t* item)
+//==============================================================================
+cerror_t vector_at(vector_t* vector, size_t index, item_t* item)
 {
-    ASSERT_E(vector != NULL, EBADPOINTER, false);
-    ASSERT_E(item != NULL, EBADPOINTER, false);
-    ASSERT_E(index < vector->size, EOUTOFRANGE, false);
-    ASSERT_E(index >= 0, EOUTOFRANGE, false);
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
+    ASSERT_E(item != NULL, EBADPOINTER, ERROR_FAILED);
+    ASSERT_E(index < vector->size, EOUTOFRANGE, ERROR_FAILED);
+    ASSERT_E(index >= 0, EOUTOFRANGE, ERROR_FAILED);
 
-    memcpy(item, vector->items + (index * vector->element_size), vector->element_size);
+    ccollection_copy(item, vector->items + (index * vector->element_size), vector->element_size);
 
-    return true;
+    return ERROR_NONE;
 }
 
-
-//========================================================
+//==============================================================================
 // Internal functions
-//========================================================
+//==============================================================================
 bool vector_is_full(vector_t* vector)
 {
     return (vector->size == vector->capacity);
 }
 
-bool vector_reserve(vector_t* vector, size_t count)
+cerror_t vector_reserve(vector_t* vector, size_t count)
 {
-    ASSERT_E(vector != NULL, EBADPOINTER, false);
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
 
     if (vector->capacity < count)
     {
         return vector_resize(vector, count);
     }
 
-    return true;
+    return ERROR_NONE;
 }
 
-bool vector_resize(vector_t* vector, size_t count)
+cerror_t vector_resize(vector_t* vector, size_t count)
 {
-    ASSERT_E(vector != NULL, EBADPOINTER, false);
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
 
     uint8_t *items = ccollection_realloc(vector->items, count * vector->element_size);
-    ASSERT(items != NULL, false);
+    ASSERT(items != NULL, ERROR_FAILED);
 
     vector->items = items;
     vector->capacity = count;
 
-    return true;
+    return ERROR_NONE;
 }
 
-bool vector_shrink(vector_t * vector)
+cerror_t vector_shrink(vector_t * vector)
 {
-    ASSERT_E(vector != NULL, EBADPOINTER, false);
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
     
     if (vector->size < vector->capacity / 4)
     {
         return vector_resize(vector, vector->capacity);
     }
 
-    return true;
+    return ERROR_NONE;
 }
 
 EXTERN_C_END

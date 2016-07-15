@@ -5,7 +5,9 @@
 #include "include/ccollection-internal.h"
 
 EXTERN_C_BEGIN
-
+/**
+ * \brief get error description for errno defined by ccollection library
+ */
 const char* ccollection_strerror(int err);
 
 EXTERN_C_END
