@@ -25,11 +25,11 @@ typedef struct vector_t
 /**
  * returns true if size == capacity
  */
-bool vector_is_full(vector_t* vector);
+bool vector_is_full(const vector_t* vector);
 /**
  * resize vector to number of elements supplied by count
  */
-cerror_t vector_resize(vector_t* vector, size_t count);
+cerror_t vector_resize(vector_t* vector, const size_t count);
 /**
  * If the size of the vector is <= 1/4 of it's capacity then the container is resized to it's half capacity
  */
@@ -38,7 +38,7 @@ cerror_t vector_shrink(vector_t * vector);
 //==============================================================================
 // ctors and dtors
 //==============================================================================
-vector_t* vector_new(size_t elem_size)
+vector_t* vector_new(const size_t elem_size)
 {
     errno = 0;
     ASSERT_E(elem_size > 0, EBADELEMSIZE, NULL);
@@ -65,17 +65,17 @@ cerror_t vector_destroy(vector_t* vector)
 //==============================================================================
 // Capacity
 //==============================================================================
-size_t vector_get_size(vector_t* vector)
+size_t vector_get_size(const vector_t* vector)
 {
     return vector->size;
 }
 
-size_t vector_get_capacity(vector_t* vector)
+size_t vector_get_capacity(const vector_t* vector)
 {
     return vector->capacity;
 }
 
-bool vector_is_empty(vector_t* vector)
+bool vector_is_empty(const vector_t* vector)
 {
     return (vector->size == 0);
 }
@@ -83,7 +83,7 @@ bool vector_is_empty(vector_t* vector)
 //==============================================================================
 // vector modifiers
 //==============================================================================
-cerror_t vector_push_back(vector_t* vector, item_t* item)
+cerror_t vector_push_back(vector_t* vector, const item_t* item)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
     ASSERT_E(item != NULL, EBADPOINTER, ERROR_FAILED);
@@ -115,7 +115,7 @@ cerror_t vector_pop_back(vector_t* vector)
     return err;
 }
 
-cerror_t vector_assign_n(vector_t* vector, size_t n, const item_t* val)
+cerror_t vector_assign_n(vector_t* vector, const size_t n, const item_t* val)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
     ASSERT_E(n > 0, EINVAL, ERROR_FAILED);
@@ -149,7 +149,7 @@ cerror_t vector_assign_n(vector_t* vector, size_t n, const item_t* val)
 //==============================================================================
 // Elements access
 //==============================================================================
-cerror_t vector_at(vector_t* vector, size_t index, item_t* item)
+cerror_t vector_at(const vector_t* vector, const size_t index, item_t* item)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
     ASSERT_E(item != NULL, EBADPOINTER, ERROR_FAILED);
@@ -164,12 +164,12 @@ cerror_t vector_at(vector_t* vector, size_t index, item_t* item)
 //==============================================================================
 // Internal functions
 //==============================================================================
-bool vector_is_full(vector_t* vector)
+bool vector_is_full(const vector_t* vector)
 {
     return (vector->size == vector->capacity);
 }
 
-cerror_t vector_reserve(vector_t* vector, size_t count)
+cerror_t vector_reserve(vector_t* vector, const size_t count)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
 
@@ -181,7 +181,7 @@ cerror_t vector_reserve(vector_t* vector, size_t count)
     return ERROR_NONE;
 }
 
-cerror_t vector_resize(vector_t* vector, size_t count)
+cerror_t vector_resize(vector_t* vector, const size_t count)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
 
@@ -196,8 +196,7 @@ cerror_t vector_resize(vector_t* vector, size_t count)
 
 cerror_t vector_shrink(vector_t * vector)
 {
-    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
-    
+    ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED); 
     if (vector->size < vector->capacity / 4)
     {
         return vector_resize(vector, vector->capacity);
