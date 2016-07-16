@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>ccollection by tibabit</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>ccollection</h1>
+        <h2>Implementation of containers like vector, list, queue, deque, stack, set, map, priority queue etc. in C</h2>
+        <a href="https://github.com/tibabit/ccollection" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="ccollection" class="anchor" href="#ccollection" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ccollection</h1>
+
+<p>Implementation of containers like vector, list, queue, deque, stack, set, map, priority queue etc. in C</p>
+
+<h2>
+<a id="container-in-progress--vector" class="anchor" href="#container-in-progress--vector" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Container in progress : vector</h2>
+
+<div class="highlight highlight-source-c"><pre><span class="pl-c">/* Create a new vector */</span>
+<span class="pl-c1">vector_t</span>* <span class="pl-en">vector_new</span>(<span class="pl-k">const</span> <span class="pl-c1">size_t</span> elem_size);
+
+<span class="pl-c">/* destory vector, free all memory */</span>
+<span class="pl-c1">cerror_t</span> <span class="pl-en">vector_destroy</span>(<span class="pl-c1">vector_t</span>* vector);
+
+<span class="pl-c">/* Reserve a predetermind size for vector */</span>
+<span class="pl-c1">cerror_t</span> <span class="pl-en">vector_reserve</span>(<span class="pl-c1">vector_t</span>* vector, <span class="pl-k">const</span> <span class="pl-c1">size_t</span> count);
+
+<span class="pl-c">/* get number of elements in vector */</span>
+<span class="pl-c1">size_t</span> <span class="pl-en">vector_get_size</span>(<span class="pl-k">const</span> <span class="pl-c1">vector_t</span>* vector);
+
+<span class="pl-c">/* get current capacity of vector */</span>
+<span class="pl-c1">size_t</span> <span class="pl-en">vector_get_capacity</span>(<span class="pl-k">const</span> <span class="pl-c1">vector_t</span>* vector);
+
+<span class="pl-c">/* check if vector is empty */</span>
+<span class="pl-k">bool</span> <span class="pl-en">vector_is_empty</span>(<span class="pl-k">const</span> <span class="pl-c1">vector_t</span>* vector);
+
+<span class="pl-c">/* insert one element at the end of the vector */</span>
+<span class="pl-c1">cerror_t</span> <span class="pl-en">vector_push_back</span>(<span class="pl-c1">vector_t</span>* vector, <span class="pl-k">const</span> <span class="pl-c1">item_t</span>* item);
+
+<span class="pl-c">/* erase an element from the end of the vector */</span>
+<span class="pl-c1">cerror_t</span> <span class="pl-en">vector_pop_back</span>(<span class="pl-c1">vector_t</span>* vector);
+
+<span class="pl-c1">cerror_t</span> <span class="pl-en">vector_assign_n</span>(<span class="pl-c1">vector_t</span>* vector, <span class="pl-k">const</span> <span class="pl-c1">size_t</span> n, <span class="pl-k">const</span> <span class="pl-c1">item_t</span>* val);
+<span class="pl-c1">cerror_t</span> <span class="pl-en">vector_insert</span>(<span class="pl-c1">vector_t</span>* vector, <span class="pl-k">const</span> <span class="pl-c1">pos_t</span> pos, <span class="pl-k">const</span> <span class="pl-c1">item_t</span>* item);
+<span class="pl-c1">cerror_t</span> <span class="pl-en">vector_erase</span>(<span class="pl-c1">vector_t</span>* vector, <span class="pl-k">const</span> <span class="pl-c1">pos_t</span> pos);
+<span class="pl-c1">cerror_t</span> <span class="pl-en">vector_swap</span>(<span class="pl-c1">vector_t</span>* first, <span class="pl-c1">vector_t</span>* second);
+<span class="pl-c1">cerror_t</span> <span class="pl-en">vector_clear</span>(<span class="pl-c1">vector_t</span>* vector);
+<span class="pl-c1">cerror_t</span> <span class="pl-en">vector_at</span>(<span class="pl-k">const</span> <span class="pl-c1">vector_t</span>* vector, <span class="pl-k">const</span> <span class="pl-c1">pos_t</span> index, <span class="pl-c1">item_t</span>* item);</pre></div>
+
+<h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use</h2>
+
+<div class="highlight highlight-source-c"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>stdio.h<span class="pl-pds">&gt;</span></span>
+
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">"</span>include/ccollection.h<span class="pl-pds">"</span></span>
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>()
+{
+    <span class="pl-c1">vector_t</span> * vec = <span class="pl-c1">vector_new</span>(<span class="pl-k">sizeof</span>(<span class="pl-k">int</span>));
+
+    <span class="pl-k">int</span> value = <span class="pl-c1">100</span>, i;
+    <span class="pl-c1">vector_push_back</span>(vec, &amp;value);
+    <span class="pl-c1">vector_push_back</span>(vec, &amp;value);
+    <span class="pl-c1">vector_push_back</span>(vec, &amp;value);
+
+    <span class="pl-k">for</span> (i = <span class="pl-c1">0</span>; i &lt; <span class="pl-c1">vector_get_size</span>(vec); i++)
+    {
+        <span class="pl-c1">vector_at</span>(vec, i, &amp;value);
+        <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-c1">%d</span> <span class="pl-pds">"</span></span>, value);
+    }
+    <span class="pl-c1">printf</span>(<span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>);
+    <span class="pl-c1">vector_destroy</span>(vec);
+}</pre></div>
+
+<h2>
+<a id="tasks-pending" class="anchor" href="#tasks-pending" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tasks pending</h2>
+
+<ul>
+<li>Iterators</li>
+<li>More unit tests</li>
+<li>benchmarking against STL vector</li>
+</ul>
+
+<h2>
+<a id="containers-to-be-implemented" class="anchor" href="#containers-to-be-implemented" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Containers to be implemented</h2>
+
+<ul>
+<li>list</li>
+<li>queue</li>
+<li>dequeue</li>
+<li>stack</li>
+<li>set</li>
+<li>map</li>
+<li>priority queue</li>
+</ul>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/tibabit/ccollection/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/tibabit/ccollection/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/tibabit/ccollection"></a> is maintained by <a href="https://github.com/tibabit">tibabit</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
