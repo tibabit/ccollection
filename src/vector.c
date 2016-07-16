@@ -86,33 +86,15 @@ bool vector_is_empty(const vector_t* vector)
 cerror_t vector_push_back(vector_t* vector, const item_t* item)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
-    ASSERT_E(item != NULL, EBADPOINTER, ERROR_FAILED);
 
-    if (vector_is_full(vector))
-    {
-        cerror_t err = vector_resize(vector, vector->capacity * 2); // double the size when vector is full
-
-        ASSERT(err == ERROR_NONE, err);
-    }
-    ccollection_copy(vector->items + (vector->size * vector->element_size), item, vector->element_size);
-    vector->size++;
-
-    return ERROR_NONE;
+    return vector_insert(vector, vector->size, item);
 }
 
 cerror_t vector_pop_back(vector_t* vector)
 {
     ASSERT_E(vector != NULL, EBADPOINTER, ERROR_FAILED);
 
-    cerror_t err = ERROR_NONE;
-
-    if (!vector_is_empty(vector))
-    {
-        vector->size--;
-        err = vector_shrink(vector);
-    }
-
-    return err;
+    return vector_erase(vector, vector->size - 1);
 }
 
 cerror_t vector_assign_n(vector_t* vector, const size_t n, const item_t* val)
