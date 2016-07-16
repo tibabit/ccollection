@@ -61,6 +61,7 @@ int main()
 ```
 
 ## Tasks pending
+- Iterators
 - More unit tests
 - benchmarking against STL vector
 
